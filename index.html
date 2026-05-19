@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Specialist Quest - Learning Roadmap</title>
+    <meta name="description" content="An interactive gamified career learning guide for becoming an AI/ML Specialist, featuring Python, ML, Robotics, and Stock Market.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particle-container"></div>
+    <div class="overlay-bg"></div>
+
+    <header class="hud-header">
+        <div class="hud-profile">
+            <div class="avatar-box">
+                <div class="avatar-img">AI</div>
+            </div>
+            <div class="player-info">
+                <h1 class="player-name">Player_One</h1>
+                <div class="rank-title" id="rank-title">Novice Code Slinger</div>
+            </div>
+        </div>
+        <div class="hud-stats">
+            <div class="level-display">
+                <span class="level-label">LEVEL</span>
+                <span class="level-value" id="level-display">1</span>
+            </div>
+            <div class="xp-container">
+                <div class="xp-text"><span id="xp-current">0</span> / <span id="xp-max">1000</span> XP</div>
+                <div class="xp-bar-bg">
+                    <div class="xp-bar-fill" id="xp-bar"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="quest-map-container">
+        <h2 class="section-title">SKILL TREE</h2>
+        <div class="map-line"></div>
+        
+        <div class="quest-nodes" id="quest-nodes">
+            <!-- Nodes will be injected here via JS -->
+        </div>
+
+        <div class="side-quests">
+            <h2 class="section-title">SIDE QUESTS</h2>
+            <div class="side-quest-grid">
+                <div class="side-quest-card" onclick="openQuestModal('robotics')">
+                    <h3>Robotics</h3>
+                    <p>Apply AI to physical agents.</p>
+                </div>
+                <div class="side-quest-card" onclick="openQuestModal('stock')">
+                    <h3>Stock Market</h3>
+                    <p>Algorithmic trading & time series.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Quest Details -->
+    <div class="modal-overlay" id="quest-modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">X</button>
+            <h2 id="modal-title">Quest Title</h2>
+            <div class="modal-body" id="modal-body">
+                <!-- Subtasks injected here -->
+            </div>
+            <div class="modal-footer">
+                <div class="reward-info">REWARD: <span id="modal-xp-reward" class="neon-text">0</span> XP</div>
+                <button class="action-btn" id="claim-btn" onclick="claimQuest()">CLAIM REWARD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Up Notification -->
+    <div class="level-up-notification" id="level-up-noti">
+        <h2>LEVEL UP!</h2>
+        <p>You are now Level <span id="new-level-text"></span></p>
+        <p class="new-rank">Rank: <span id="new-rank-text"></span></p>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

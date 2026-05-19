@@ -9,7 +9,7 @@ It is focused on skills like **Python, AI/ML, logic building, data science, robo
 Add your live website link here:
 
 ```txt
-https://your-username.github.io/skill-quest/
+https://blenxo.github.io/python-ai-tracker/
 ````
 
 ## 📌 Features

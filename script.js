@@ -7,6 +7,21 @@ let playerState = {
     completedSubtasks: [] // IDs of completed subtasks
 };
 
+function saveState() {
+    localStorage.setItem("cyberQuestState", JSON.stringify(playerState));
+}
+
+function loadState() {
+    const saved = localStorage.getItem("cyberQuestState");
+    if (saved) {
+        try {
+            playerState = JSON.parse(saved);
+        } catch(e) {
+            console.error("Could not parse saved state.");
+        }
+    }
+}
+
 // Level mapping
 const rankTitles = [
     "Novice Code Slinger",
@@ -27,6 +42,7 @@ let currentActiveQuestId = null;
 
 // Initialization
 document.addEventListener("DOMContentLoaded", () => {
+    loadState();
     updateHUD();
     renderSkillTree();
     createStars();
@@ -75,36 +91,51 @@ function renderSkillTree() {
     const container = document.getElementById("quest-nodes");
     container.innerHTML = "";
 
-    let isPreviousCompleted = true; // First node is always unlocked
-
     quests.forEach((q, index) => {
         let isCompleted = playerState.completedQuests.includes(q.id);
-        let isLocked = !isPreviousCompleted && !isCompleted;
 
-        let statusIcon = isLocked ? "🔒" : (isCompleted ? "✅" : "▶️");
+        let statusIcon = isCompleted ? "✅" : "";
 
         const nodeWrapper = document.createElement("div");
         nodeWrapper.className = "node-wrapper";
 
         const card = document.createElement("div");
-        card.className = `node-card ${isLocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`;
+        card.className = `node-card ${isCompleted ? 'completed' : ''}`;
 
-        if (!isLocked) {
-            card.onclick = () => openQuestModal(q.id, 'main');
-        }
+        card.onclick = () => openQuestModal(q.id, 'main');
 
         card.innerHTML = `
             <div class="node-status">${statusIcon}</div>
             <h3 class="node-title">Level ${index + 1}: ${q.title}</h3>
             <p class="node-desc">${q.desc}</p>
+            <p class="node-reward" style="color: var(--neon-magenta); font-size: 0.85rem; margin-top: 10px; font-weight: bold; letter-spacing: 1px;">+${q.reward} XP</p>
         `;
 
         nodeWrapper.appendChild(card);
         container.appendChild(nodeWrapper);
-
-        // Next node is only unlocked if this one is completed
-        isPreviousCompleted = isCompleted;
     });
+
+    const sideContainer = document.getElementById("side-quests-container");
+    if (sideContainer) {
+        sideContainer.innerHTML = "";
+        
+        Object.values(sideQuests).forEach(sq => {
+            let isCompleted = playerState.completedQuests.includes(sq.id);
+            
+            const card = document.createElement("div");
+            card.className = `side-quest-card ${isCompleted ? 'completed' : ''}`;
+            card.onclick = () => openQuestModal(sq.id, 'side');
+            
+            card.innerHTML = `
+                <div class="node-status" style="position: absolute; top: 10px; right: 10px; font-size: 1.2rem;">${isCompleted ? '✅' : ''}</div>
+                <h3>${sq.title}</h3>
+                <p>${sq.desc}</p>
+                <p class="node-reward" style="color: var(--neon-magenta); font-size: 0.9rem; margin-top: 15px; font-weight: bold; letter-spacing: 1px;">+${sq.reward} XP</p>
+            `;
+            
+            sideContainer.appendChild(card);
+        });
+    }
 }
 
 function openQuestModal(questId, type = 'side') {
@@ -266,6 +297,7 @@ function toggleSubtopic(taskId, btnElement) {
         }
     }
     checkModalProgress();
+    saveState();
 }
 
 function claimQuest() {
@@ -294,6 +326,7 @@ function claimQuest() {
     // Close modal & re-render
     closeModal();
     renderSkillTree();
+    saveState();
 }
 
 function addXP(amount) {
@@ -313,6 +346,7 @@ function addXP(amount) {
     }
 
     updateHUD();
+    saveState();
 }
 
 function triggerLevelUp() {
